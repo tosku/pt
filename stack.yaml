@@ -1,0 +1,7 @@
+flags: {}
+extra-package-dbs: []
+packages:
+- '.'
+extra-deps:
+- natural-numbers-0.1.2.0
+resolver: lts-7.11

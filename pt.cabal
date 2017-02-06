@@ -1,0 +1,63 @@
+name:                pt
+version:             0.1.0.0
+synopsis:            Ising spin metropolis mcmc simulation
+description:         Please see README.md
+homepage:            https://github.com/tosku/pt#readme
+license:             GPL
+license-file:        LICENSE
+author:              Thodoris Papakonstantinou
+maintainer:          tpapak@phys.uoa.gr
+copyright:           2016 Thodoris Papakonstantinou
+category:            Physics
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Lattice
+                     , Grid
+                     , Metropolis
+                     , Statistics
+  build-depends:       base >= 4.7 && < 5
+                     , mtl >= 2.2.1
+                     , natural-numbers >= 0.1.2.0
+                     , random
+                     , mersenne-random-pure64 >= 0.2.0.5
+                     , vector
+                     , stm >= 2.4.4.1
+                     , monad-par >= 0.3.4.8
+                     , containers >= 0.5.7.1
+  default-language:    Haskell2010
+
+executable pt-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -O2 -threaded -rtsopts -with-rtsopts=-N
+--  ghc-options:         -fprof-auto -O2 -threaded -rtsopts -eventlog -with-rtsopts=-N
+  build-depends:       base
+                     , mtl >= 2.2.1
+                     , natural-numbers >= 0.1.2.0
+                     , random
+                     , mersenne-random-pure64 >= 0.2.0.5
+                     , stm >= 2.4.4.1
+                     , pt
+                     , parallel >= 3.2.1.0
+                     , monad-par >= 0.3.4.8
+                     , containers >= 0.5.7.1
+  default-language:    Haskell2010
+
+test-suite pt-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , mtl >= 2.2.1
+                     , random
+                     , pt
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/tosku/pt
