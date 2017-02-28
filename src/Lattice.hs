@@ -46,13 +46,19 @@ edgeEnergySTM e real conf = do
   spinTarget <- fmap (fromIntegral . spinToInt) (getSpinSTM t conf)
   return $! - spinSource * spinTarget * real e
 
+edgeEnergyUnsafe :: Edge -> Realization -> Configuration -> IO Energy
+edgeEnergyUnsafe e real conf = do
+  let (s,t) = e
+  spinSource <- fmap (fromIntegral . spinToInt) (getSpinUnsafe s conf)
+  spinTarget <- fmap (fromIntegral . spinToInt) (getSpinUnsafe t conf)
+  return $! - spinSource * spinTarget * real e
+
 edgeEnergy :: Edge -> Realization -> Configuration -> IO Energy
 edgeEnergy e real conf = atomically $ edgeEnergySTM e real conf
 
 latticeEnergy :: [Edge] -> Realization -> Configuration -> IO Energy
 latticeEnergy edges real conf = do
-  --a <- ParIO.runParIO $ parMapM (liftIO . (\e -> edgeEnergy e real conf)) edges
-  a <- mapM (\e -> edgeEnergy e real conf) edges
+  a <- mapM (\e -> edgeEnergyUnsafe e real conf) edges
   let b = sum a
   return $! b
 
@@ -78,6 +84,9 @@ randomConfiguration g x = atomically $ randomConfigurationSTM g x
 
 getSpinSTM :: Vertex -> Configuration -> STM Spin
 getSpinSTM v conf = readTVar $ conf V.! (v-1)
+
+getSpinUnsafe :: Vertex -> Configuration -> IO Spin
+getSpinUnsafe v conf = readTVarIO $ conf V.! (v-1)
 
 getSpin :: Vertex -> Configuration -> IO Spin
 getSpin v conf = atomically $ getSpinSTM v conf

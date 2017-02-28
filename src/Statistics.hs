@@ -12,6 +12,6 @@ import Data.List (genericLength)
 equilibrate :: (Real a) => Int -> [a] -> [a]
 equilibrate eq xs = drop (quot (length xs) eq) xs 
 
-mean :: (Real a, Fractional b) => [a] -> b
-mean xs = realToFrac (sum xs) / genericLength xs 
+mean :: (Real a) => [a] -> Rational
+mean xs = toRational (sum xs) / toRational(genericLength xs)
 
