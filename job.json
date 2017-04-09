@@ -1,0 +1,10 @@
+{ "simlatticeSize" : 50
+, "simdimension"   : 2
+, "simtemperature" : 2.9
+, "simchunks"      : 2
+, "simcores"       : 1
+, "simmcs"         : 1000
+, "simrootSeed"    : 1980
+, "simeqfname"     : "equilibration.pt"
+, "simresfname"    : "results.pt"
+} 

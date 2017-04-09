@@ -1,4 +1,20 @@
-module Lattice
+{-|
+Module      : Ising
+Description : Ising model's realization and properties definitions
+Copyright   : Thodoris Papakonstantinou, 2016
+License     : GPL-3
+Maintainer  : mail@tpapak.com
+Stability   : experimental
+Portability : POSIX
+
+- Realization
+- get Ennergy of lattice
+- get Magnetization of lattice
+- Assign random spin configuration
+ 
+ -}
+
+module Ising
     ( randomConfiguration
     , getSpin
     , flipSpin
@@ -64,12 +80,7 @@ latticeEnergy edges real conf = do
 
 type Magnetization = Int
 magnetization :: Configuration -> IO Magnetization
-magnetization = V.foldM (\x s -> (fmap ((+ x) . spinToInt) . readTVarIO) s) 0
--- magnetizationSTM :: Configuration -> STM Magnetization
--- magnetizationSTM = V.foldM (\x s -> (fmap ((+ x) . spinToInt) . readTVar) s) 0
--- magnetization :: Configuration -> IO Magnetization
--- magnetization conf = atomically $ magnetizationSTM conf
-
+magnetization = V.foldM' (\x s -> (fmap ((+ x) . spinToInt) . readTVarIO) s) 0
 
 randomBools :: Int -> PureMT -> [Bool]
 randomBools 0 _ = []

@@ -8,15 +8,22 @@ Parallel tempering simulation using Software Transactional Memory spin updates f
 `stack build`
 
 ##Execute
-`time stack exec -- pt-exe L d mcs  +RTS -N`
-####Arguments
+`time stack exec -- pt-exe jobfile.json`
+
 **Currently just pure *Ising* model.**
+
+####jobfile.json
 * L: lattice size
 * d: dimension
-* mcs: Monte Carlo Steps (1 mcs = N metropolis spin flip attempts) 
+* mcs: Monte Carlo Steps (1 mcs = N $(L^d)$ metropolis spin flip attempts)
+* chunks: sampling frequency
+* cores: simultaneous spin flip desired
+* temp: Temperature
+* eqfname: equilibration measurements filename
+* resfname: results filename
 
 ##Profiling
 Building: `stack build -- profile`
 
-Execute with: `stack exec pt-exe 50 2 3000 -- +RTS -N -p`
+Execute with: `stack exec pt-exe jobfile.json -- +RTS -N -p`
 and you get profiling file `pt-exe.prof`

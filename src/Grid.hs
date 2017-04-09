@@ -1,3 +1,20 @@
+{-|
+Module      : Grid
+Description : d-dimentional cubic lattices
+
+Copyright   : Thodoris Papakonstantinou, 2016
+License     : GPL-3
+Maintainer  : mail@tpapak.com
+Stability   : experimental
+Portability : POSIX
+
+Functions defining d-dimentional cubic lattices by giving adjacent vertices and edges of vertex
+following conventional vertex labeling.
+
+- L: linear size
+- d: dimensionality (2: square, 3: cubic, >3: hypercubic)
+ -}
+
 module Grid
     ( Vertex
     , Edge
@@ -29,7 +46,8 @@ gridN l d = fromEnum l ^ fromEnum d
 gridVertices :: L -> D -> [Vertex]
 gridVertices l d = [1 .. (fromEnum l ^ fromEnum d)]
 
-pbcNeighbor :: Vertex -> L -> D -> Direction -> Vertex -- returns the next vertex of v in the d dimension for a grid of side l
+-- | Returns the next vertex of v in the d dimension for a grid of side l
+pbcNeighbor :: Vertex -> L -> D -> Direction -> Vertex 
 pbcNeighbor v l' d' r  | r == Forward =
                       if not $ isBoundary v l d
                         then v + innerOffset
@@ -44,14 +62,14 @@ pbcNeighbor v l' d' r  | r == Forward =
                           l = fromEnum l'
                           d = fromEnum d'
 
--- Grid function from vertex to a tuple giving forward and backward vertices with Toroidal Boundary Conditions (pbc)
 type Grid = L -> D -> Vertex -> [Edge]
-pbcGrid :: Grid -- function
+
+-- | Returns tuple giving forward and backward vertices of given vertex on a Toroidal Boundary Conditions (pbc) grid
+pbcGrid :: Grid
 pbcGrid l d v = (\r d -> case r of Forward ->  (v, pbcNeighbor v l d r)
                                    Backward -> (pbcNeighbor v l d r , v)
   ) <$> [Forward,Backward] <*> [1 .. d]
 
+-- | List of edges of grid with periodic boundary conditions
 pbcEdges :: L -> D -> [Edge]
 pbcEdges l d = (\v j-> (v, pbcNeighbor v l j Forward)) <$> gridVertices l d <*> [1 .. d]
---   in (source, target)
---   where map (\v -> neibhor v l d Forward) gridVertices l d
